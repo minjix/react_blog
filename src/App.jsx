@@ -1,6 +1,7 @@
 /* eslint-disable*/
 
 import { useState } from 'react';
+import React from 'react'
 import './App.css'
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   let [likeBtn, setLikeBtn] = useState([0,0,0]);
   let [modal, setModal] = useState(false);
   let [tIndex, setTIndex] = useState(0);
+  let [input, setInput] = useState('');
 
   return (
     <div className='App'>
@@ -48,7 +50,8 @@ function App() {
           return (
             <div className='list'>
               <h4 onClick={() => {modal == true ? setModal(false) : setModal(true); setTIndex(i)}}>{postTitle[i]} 
-                  <span onClick={ () => {
+                  <span onClick={ (e) => {
+                    e.stopPropagation();
                   let copy = [...likeBtn];
                   copy[i] +=  1
                   setLikeBtn(copy)
@@ -56,15 +59,39 @@ function App() {
                 </h4>
               {/* <h4>{a}</h4> */}
               <p>5월 12일 발행</p>
+              <button onClick={() => {
+                let copyTitle = [...postTitle];
+                copyTitle.splice(i, 1);
+                setPostTitle1(copyTitle);
+
+                let copyLike = [...likeBtn];
+                copyLike.splice(i, 1);
+                setLikeBtn(copyLike);
+              }}>삭제</button>
             </div>
           )
         })
       }
 
+      <input onChange={(e) => {setInput(e.target.value); console.log(input);}}/>
+      <button onClick={() => {
+
+        if(input != null && input != ''){
+          let copyTitle = [...postTitle];
+          copyTitle.unshift(input);
+          setPostTitle1(copyTitle);
+  
+          let copyLike = [...likeBtn];
+          copyLike.unshift(0);
+          setLikeBtn(copyLike);
+        }
+      }}>추가</button>
+
       {
         modal == true ? <Modal chgTitle={setPostTitle1} postTitle={postTitle} tIndex={tIndex}/> : null
       }
       
+      <Modal2 />
       
     </div>
   )
@@ -85,6 +112,27 @@ function Modal(props){
       }} */}
     </div>
   )
+}
+
+class Modal2 extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name : 'kim',
+      age : 20
+    }
+  }
+
+  render() {
+    return(
+      <div>Hi~! {this.state.age} 
+        <button onClick={() => {
+          this.setState({age: 21})
+        }}>버튼</button>
+      </div>
+      
+    )
+  }
 }
 
 
